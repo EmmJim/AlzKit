@@ -10,24 +10,21 @@ import { CommonActions, useNavigation } from '@react-navigation/core';
 
 //Redux
 import { useDispatch, useSelector } from 'react-redux';
-import { login } from '../../redux/actions/auth';
-import {signUpReset} from '../../redux/actions/usuarios'
+import { signUp } from '../../redux/actions/usuarios';
 
 
 //Hooks
 import {useSnackBar} from '../../hooks/useSnackBar';
 
 
-const Login = ({navigation}) => {
+const SignUp = ({navigation}) => {
     const snackbar = useSnackBar();
     const dispatch = useDispatch();
-    const {error, token} = useSelector(state => state.auth);
-    const {mensaje} = useSelector(state => state.usuarios);
-    console.log(token);
-    console.log(error);
+    const {error, mensaje, screen} = useSelector(state => state.usuarios);
 
     const [formValues, setFormValues] = useState({
         nombre: '',
+        email: '',
         password: '',
         tipoUsuario: null
     })
@@ -56,10 +53,10 @@ const Login = ({navigation}) => {
     }
 
     const handleOnSubmit = async() => {
-        if(formValues.nombre === '' && formValues.password === '' && formValues.tipoUsuario === null){
+        if(formValues.nombre === '' && formValues.email === '' && formValues.password === '' && formValues.tipoUsuario === null){
             snackbar('Todos los campos son obligatorios', 'error');
         }else{
-            dispatch(login(formValues));
+            dispatch(signUp(formValues));
         }
     } 
     // setTimeout(() => {
@@ -67,28 +64,29 @@ const Login = ({navigation}) => {
     // }, 2000);
 
     useEffect(() => {
-        if(token){
+        if(screen !== null){
             const resetAction = CommonActions.reset({
                 index: 0,
                 routes: [
-                    {name: `Home`}
+                    {name: `${screen}`}
                 ]
             });
         
             navigation.dispatch(resetAction);
         }
-    }, [token]);
+    }, [screen]);
 
     useEffect(() => {
-        if(error && Object.keys(error).length > 0){
+        if(mensaje !== null){
+            snackbar(mensaje, 'success');
+        }
+    }, [mensaje]);
+    
+    useEffect(() => {
+        if(error !== null){
             snackbar(error.message, error.type);
         }
-    }, [error]);
-
-
-    useEffect(() => {
-        dispatch(signUpReset());
-    }, []);
+    },[error]);
 
     return ( 
             <ScrollView
@@ -98,15 +96,15 @@ const Login = ({navigation}) => {
                 <View
                     style={{flex: 1, backgroundColor: 'white', justifyContent: 'space-between'}}
                 >
-                    <Animatable.View style={{paddingTop: 80, alignItems: 'center', marginBottom: 80}} animation="fadeInDownBig">
-                        <Image style={{width: 85, height: 113}} source={require('../../../assets/Logo.png')} />
+                    <Animatable.View style={{paddingTop: 80, alignItems: 'center', marginBottom: 80}} animation="zoomIn">
+                        <Image style={{width: 60, height: 80}} source={require('../../../assets/Logo.png')} />
                     </Animatable.View>
                     <Animatable.View 
                         style={{
                             alignItems: 'flex-start',
                             justifyContent: 'center', 
                             backgroundColor: '#ff7ae7', 
-                            height: '60%',
+                            height: '70%',
                             borderTopRightRadius: 80,
                             shadowColor: 'black',
                             shadowOffset: {width: 10, height: -4},
@@ -115,13 +113,17 @@ const Login = ({navigation}) => {
                             elevation: 50,
                             paddingLeft: 20
                         }}
-                        animation="fadeInUpBig"
-                        delay={1000}
+                        animation="fadeInUp"
                     >
                         <View style={{flexDirection: 'row', marginVertical: 15, alignItems: 'center'}}>
-                            <Text style={{color: 'white', fontWeight: 'bold', fontSize: 16, marginRight: 40}}>Nombre:</Text>
+                            <Text style={{color: 'white', fontWeight: 'bold', fontSize: 16, marginRight: 38}}>Nombre:</Text>
                             <TextInput placeholder='Tu Nombre' onChangeText={value => handleOnChange('nombre', value)} style={{backgroundColor: 'white', borderRadius: 10, paddingVertical: 3, paddingHorizontal: 10, width: '55%', marginRight: 10}}></TextInput>
                             <FontAwesome5 name="user-alt" size={22} color="white" />
+                        </View>
+                        <View style={{flexDirection: 'row', marginVertical: 15, alignItems: 'center'}}>
+                            <Text style={{color: 'white', fontWeight: 'bold', fontSize: 16, marginRight: 52}}>Email:</Text>
+                            <TextInput placeholder='Tu Email' onChangeText={value => handleOnChange('email', value)} style={{backgroundColor: 'white', borderRadius: 10, paddingVertical: 3, paddingHorizontal: 10, width: '55%', marginRight: 10}}></TextInput>
+                            <Ionicons name="ios-mail-sharp" size={22} color="white" />
                         </View>
                         <View style={{flexDirection: 'row', marginVertical: 15, alignItems: 'center'}}>
                             <Text style={{color: 'white', fontWeight: 'bold', fontSize: 16,  marginRight: 15}}>Contraseña:</Text>
@@ -156,20 +158,20 @@ const Login = ({navigation}) => {
                             </TouchableOpacity>
                         </View>
 
-                        <View style={{marginTop: 10, marginLeft: 50}}>
+                        <View style={{marginTop: 10, marginLeft: 70}}>
                             <TouchableOpacity onPress={() => {
-                                navigation.navigate('SignUp');
+                                navigation.navigate('Login');
                             }}>
-                                <Text style={{color: 'white', fontWeight: 'bold', textAlign: 'center'}}>¿Aún no tienes cuenta? Registrate Aquí</Text>
+                                <Text style={{color: 'white', fontWeight: 'bold', textAlign: 'center'}}>¿Ya tienes cuenta? Inicia Sesión</Text>
                             </TouchableOpacity>
                         </View>
 
-                        <View style={{marginTop: 40, width: '40%', marginLeft: 100}}>
+                        <View style={{marginTop: 40, marginBottom: 30, width: '40%', marginLeft: 100}}>
                             <TouchableOpacity
                                 style={{backgroundColor: '#fff', padding: 12, borderRadius: 20, alignItems: 'center'}}
                                 onPress={handleOnSubmit}
                             >
-                                <Text style={{fontWeight: 'bold', color: 'black'}}>Iniciar Sesión</Text>
+                                <Text style={{fontWeight: 'bold', color: 'black'}}>Registrar mi cuenta</Text>
                             </TouchableOpacity>
                         </View>
                     </Animatable.View>
@@ -178,4 +180,4 @@ const Login = ({navigation}) => {
      );
 }
  
-export default Login;
+export default SignUp;

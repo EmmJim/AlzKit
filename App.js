@@ -3,7 +3,6 @@ import { Platform, StyleSheet, View } from 'react-native';
 import Constants from 'expo-constants'
 import AppContainer from './src';
 
-
 const isAndroid = Platform.OS === 'android';
 
 export default function App() {

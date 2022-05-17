@@ -1,0 +1,12 @@
+export const REGISTRO_EXITOSO = 'auth REGISTRO_EXITOSO';
+export const REGISTRO_ERROR = 'auth REGISTRO_ERROR';
+export const RESETEAR_SIGNUP = 'auth RESETEAR_SIGNUP';
+export const LOGIN_EXITOSO = 'auth LOGIN_EXITOSO';
+export const LOGIN_ERROR = 'auth LOGIN_ERROR';
+export const RESETEAR_USUARIO = 'auth RESETEAR_USUARIO';
+export const REDIRECCIONAR_USUARIO = 'auth REDIRECCIONAR_USUARIO';
+export const OBTENER_USUARIO = 'auth OBTENER_USUARIO';
+export const CERRAR_SESION = 'auth CERRAR_SESION';
+
+export const LOCALIZACION_EXITO = 'pacientes LOCALIZACION_EXITO';
+export const LOCALIZACION_ERROR = 'pacientes LOCALIZACION_ERROR';
